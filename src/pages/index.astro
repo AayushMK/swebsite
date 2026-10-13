@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import Inkblot from '../components/Inkblot.astro';
+import PostList from '../components/PostList.astro';
+import TopicNav from '../components/TopicNav.astro';
+import { getPosts, url } from '../lib/site';
+
+const posts = await getPosts();
+// The hero blot changes with the latest article, so the front page shifts as she writes.
+const heroSeed = posts[0]?.data.title ?? 'shrutika';
+---
+<Base>
+  <section class="hero wrap">
+    <div class="card">
+      <Inkblot seed={heroSeed} unfold label="An inkblot, the kind used in Rorschach tests" />
+    </div>
+    <div class="intro">
+      <h1>Shrutika</h1>
+      <p>
+        I studied psychology, so I can't stop asking why people do what they do. I write about
+        what happens to me, the society we live in, and the films I keep thinking about long
+        after they end.
+      </p>
+      <p class="more"><a href={url('about/')}>More about me</a></p>
+    </div>
+  </section>
+
+  <section class="writing wrap" aria-labelledby="writing-h">
+    <h2 id="writing-h">Writing</h2>
+    <TopicNav />
+    <PostList posts={posts} />
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    padding-block: clamp(2rem, 7vw, 5.5rem) clamp(3rem, 8vw, 6rem);
+  }
+  .card { max-width: 26rem; justify-self: center; width: 100%; }
+  h1 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(3.5rem, 11vw, 7.25rem);
+    font-style: italic;
+    font-weight: 260;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    font-variation-settings: 'opsz' 72;
+  }
+  .intro p { margin: 0; max-width: 28rem; font-size: 1.25rem; line-height: 1.6; }
+  .intro .more { margin-top: 1.25rem; font-size: 1rem; }
+  .writing h2 {
+    font-size: var(--step-2);
+    font-weight: 400;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+  @media (max-width: 46rem) {
+    .hero { grid-template-columns: 1fr; text-align: left; }
+    .card { max-width: 16rem; justify-self: start; }
+  }
+</style>

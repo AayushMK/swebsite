@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import Inkblot from '../components/Inkblot.astro';
+import { url } from '../lib/site';
+---
+<Base title="Page not found">
+  <section class="wrap nf">
+    <div class="blot"><Inkblot seed="lost" /></div>
+    <h1>This page doesn't exist</h1>
+    <p>The link may be old or mistyped. <a href={url()}>Go to all writing</a></p>
+  </section>
+</Base>
+<style>
+  .nf { padding-top: 4rem; max-width: 34rem; }
+  .blot { width: 8rem; margin-bottom: 2rem; }
+  h1 { font-weight: 350; font-size: var(--step-2); margin: 0 0 0.5rem; }
+  p { color: var(--ink-soft); margin: 0; }
+</style>

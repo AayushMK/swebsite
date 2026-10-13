@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Inkblot from '../components/Inkblot.astro';
+import { SITE } from '../lib/site';
+---
+<Base title="About" description="About Shrutika, a psychology graduate who writes about life, society and movies.">
+  <section class="wrap about">
+    <div class="blot"><Inkblot seed="about shrutika" /></div>
+    <div class="prose">
+      <h1>About me</h1>
+      <!-- Shrutika: rewrite this in your own words. -->
+      <p>
+        Hi, I'm Shrutika. I did my +2 in science, then went on to study psychology for my
+        bachelor's. Science taught me to ask for evidence. Psychology taught me that people
+        rarely act on evidence alone.
+      </p>
+      <p>
+        This is where I write. Some pieces are about things that happened to me, some are about
+        the society we live in and the rules nobody remembers agreeing to, and a lot of them are
+        about movies, because a good film is one of the best ways I know to look inside someone
+        else's head.
+      </p>
+      <p>
+        If something here made you think, or you disagree with me, I would love to hear from you
+        at <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    padding-top: 3rem;
+  }
+  h1 { font-size: var(--step-3); font-weight: 300; font-style: italic; letter-spacing: -0.03em; line-height: 1.1; margin: 0 0 1.5rem; }
+  @media (max-width: 40rem) {
+    .about { grid-template-columns: 1fr; }
+    .blot { width: 6rem; }
+  }
+</style>

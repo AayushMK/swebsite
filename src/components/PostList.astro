@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Inkblot from './Inkblot.astro';
+import { TOPICS, url, formatDate, readingTime } from '../lib/site';
+
+interface Props { posts: CollectionEntry<'blog'>[] }
+const { posts } = Astro.props;
+---
+{posts.length === 0 ? (
+  <p class="empty">No articles here yet. New writing will show up on this page as soon as it is published.</p>
+) : (
+  <ol class="posts" reversed>
+    {posts.map((post) => (
+      <li class="post">
+        <a class="blot" href={url(`writing/${post.slug}/`)} tabindex="-1" aria-hidden="true">
+          <Inkblot seed={post.data.title} />
+        </a>
+        <div>
+          <h3><a href={url(`writing/${post.slug}/`)}>{post.data.title}</a></h3>
+          <p class="desc">{post.data.description}</p>
+          <p class="meta">
+            <a href={url(`topics/${post.data.topic}/`)}>{TOPICS[post.data.topic].name}</a>
+            <span><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time></span>
+            <span>{readingTime(post.body)}</span>
+          </p>
+        </div>
+      </li>
+    ))}
+  </ol>
+)}
+
+<style>
+  .posts { list-style: none; margin: 0; padding: 0; }
+  .post {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--rule);
+  }
+  .post:last-child { border-bottom: 1px solid var(--rule); }
+  .blot { display: block; padding-top: 0.2rem; }
+  .blot :global(.inkblot) { transition: transform 0.4s ease; }
+  .post:hover .blot :global(.inkblot) { transform: scale(1.06); }
+  h3 {
+    margin: 0;
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  h3 a { text-decoration: none; }
+  .desc { margin: 0.4rem 0 0; color: var(--ink-soft); max-width: 34rem; line-height: 1.55; }
+  .meta {
+    margin: 0.6rem 0 0;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.1rem;
+  }
+  .meta a { color: var(--accent); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+  .empty { color: var(--ink-soft); font-style: italic; }
+  @media (max-width: 34rem) {
+    .post { grid-template-columns: 3.5rem 1fr; gap: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .blot :global(.inkblot) { transition: none; }
+  }
+</style>

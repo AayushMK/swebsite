@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import TopicNav from '../../components/TopicNav.astro';
+import { getPosts, TOPICS, type Topic } from '../../lib/site';
+
+export function getStaticPaths() {
+  return Object.keys(TOPICS).map((topic) => ({ params: { topic } }));
+}
+const topic = Astro.params.topic as Topic;
+const info = TOPICS[topic];
+const posts = (await getPosts()).filter((p) => p.data.topic === topic);
+---
+<Base title={info.name} description={info.blurb}>
+  <section class="wrap head">
+    <h1>{info.name}</h1>
+    <p>{info.blurb}</p>
+  </section>
+  <section class="wrap">
+    <TopicNav current={topic} />
+    <PostList posts={posts} />
+  </section>
+</Base>
+
+<style>
+  .head { padding-block: 3rem 2rem; }
+  h1 { margin: 0; font-size: var(--step-3); font-weight: 300; font-style: italic; letter-spacing: -0.03em; line-height: 1.1; }
+  .head p { margin: 0.5rem 0 0; color: var(--ink-soft); }
+</style>
