@@ -1,39 +1,98 @@
 ---
-import { url } from '../lib/site';
----
-<section class="hero wrap" aria-labelledby="hero-title">
-  <h1 id="hero-title" class="headword">
-    <span class="visually-hidden">Shrutika</span>
-    <span class="word" aria-hidden="true" data-headword>
-      <span class="letter">s</span><span class="letter">h</span><span class="letter">r</span><span class="letter">u</span><span class="dot">·</span><span class="letter">t</span><span class="letter">i</span><span class="dot">·</span><span class="letter">k</span><span class="letter">a</span>
-    </span>
-  </h1>
-  <script is:inline>
-    // Start the name scrambled so it can sort itself out once the fonts load.
-    // Without JavaScript, or with reduced motion, the name simply shows as is.
-    (function () {
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var word = document.querySelector('[data-headword]');
-      var letters = Array.prototype.slice.call(word.querySelectorAll('.letter'));
-      var byChar = {};
-      letters.forEach(function (el) { byChar[el.textContent] = el; });
-      word.replaceChildren.apply(word, 'kathirus'.split('').map(function (c) { return byChar[c]; }));
-      word.dataset.scrambled = 'true';
-      document.documentElement.classList.add('hero-intro');
-      setTimeout(function () { document.documentElement.classList.add('hero-settled'); }, 6000);
-    })();
-  </script>
+import { url, HAS_PORTRAIT } from '../lib/site';
 
-  <div class="entry">
-    <p class="pron"><span>/ʃru·ti·kaː/</span> <i>noun</i></p>
-    <ol class="senses">
-      <li>From Sanskrit <i>śruti</i>, “that which is heard.”</li>
-      <li>A psychology graduate who writes about people, and then says it out loud, in English or auf Deutsch.</li>
-    </ol>
-    <p class="example">“Ask Shrutika. She’ll have the word for it.”</p>
-    <div class="actions">
-      <a class="button primary" href={url('writing/')}>Read my writing</a>
-      <a class="button quiet" href={url('#speaking')}>Invite me to speak</a>
+// Loose letter tiles on the desk. Points are the usual Scrabble values.
+const tiles = [
+  { ch: 'H', pts: 4, x: '2%', y: '70%', r: '-8deg' },
+  { ch: 'A', pts: 1, x: '15%', y: '80%', r: '5deg' },
+  { ch: 'L', pts: 1, x: '27%', y: '72%', r: '-3deg' },
+  { ch: 'L', pts: 1, x: '38%', y: '83%', r: '9deg' },
+  { ch: 'O', pts: 1, x: '50%', y: '75%', r: '-6deg' },
+];
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero-inner">
+    <h1 id="hero-title" class="headword">
+      <span class="visually-hidden">Shrutika</span>
+      <span class="word" aria-hidden="true" data-headword>
+        <span class="letter">s</span><span class="letter">h</span><span class="letter">r</span><span class="letter">u</span><span class="dot">·</span><span class="letter">t</span><span class="letter">i</span><span class="dot">·</span><span class="letter">k</span><span class="letter">a</span>
+      </span>
+    </h1>
+    <script is:inline>
+      // Start the name scrambled so it can sort itself out once the fonts load.
+      // Without JavaScript, or with reduced motion, the name simply shows as is.
+      (function () {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var word = document.querySelector('[data-headword]');
+        var letters = Array.prototype.slice.call(word.querySelectorAll('.letter'));
+        var byChar = {};
+        letters.forEach(function (el) { byChar[el.textContent] = el; });
+        word.replaceChildren.apply(word, 'kathirus'.split('').map(function (c) { return byChar[c]; }));
+        word.dataset.scrambled = 'true';
+        document.documentElement.classList.add('hero-intro');
+        setTimeout(function () { document.documentElement.classList.add('hero-settled'); }, 6000);
+      })();
+    </script>
+
+    <div class="below">
+      <div class="entry">
+        <p class="pron">
+          <span class="ipa">/ʃru·ti·kaː/</span> <i>noun</i>
+          <span class="note" aria-hidden="true">
+            <svg viewBox="0 0 40 20" width="34" height="17"><path d="M38 14 C 26 18, 12 16, 4 6 M4 6 l1 7 M4 6 l7 1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            say it like “shroo-ti-kaa”
+          </span>
+        </p>
+        <ol class="senses">
+          <li>From Sanskrit <i>śruti</i>, “that which is heard.”</li>
+          <li>A psychology graduate who writes about people, and then says it out loud, in English or auf Deutsch.</li>
+        </ol>
+        <p class="example">“Ask Shrutika. She’ll have the word for it.”</p>
+        <div class="actions">
+          <a class="button primary" href={url('writing/')}>Read my writing</a>
+          <a class="button quiet" href={url('#speaking')}>Invite me to speak</a>
+        </div>
+      </div>
+
+      <!-- Things on her desk: one for each thing she loves. They can be picked up and moved. -->
+      <div class="desk" aria-hidden="true">
+        <div class="obj badge" data-drag style="--x: 4%; --y: 4.5em; --r: -5deg; --i: 0">
+          <span class="strap"></span>
+          <span class="card">
+            <span class="badge-top">Speaker</span>
+            <span class="badge-name">Shrutika</span>
+            <span class="badge-sub">Psychology, society, film</span>
+          </span>
+        </div>
+
+        <div class="obj ticket" data-drag style="--x: 47%; --y: 6%; --r: 7deg; --i: 1">
+          <span class="ticket-main">
+            <span class="ticket-kicker">Admit one</span>
+            <span class="ticket-title">Kopfkino</span>
+            <span class="ticket-meta">the cinema in my head</span>
+          </span>
+          <span class="ticket-stub">Row F<br />Seat 12</span>
+        </div>
+
+        <div class="obj sticky" data-drag style="--x: 58%; --y: 46%; --r: -4deg; --i: 2">
+          <span class="sticky-label">Wort des Tages</span>
+          <span class="sticky-word">Fernweh</span>
+          <span class="sticky-def">a longing for places I’ve never been</span>
+        </div>
+
+        {HAS_PORTRAIT && (
+          <div class="obj polaroid" data-drag style="--x: 30%; --y: 22%; --r: 3deg; --i: 3">
+            <img src={url('portrait.jpg')} alt="" width="320" height="320" />
+            <span>me, mid-sentence</span>
+          </div>
+        )}
+
+        {tiles.map((t, i) => (
+          <span class="obj tile" data-drag style={`--x: ${t.x}; --y: ${t.y}; --r: ${t.r}; --i: ${i + 3}`}>
+            {t.ch}<small>{t.pts}</small>
+          </span>
+        ))}
+      </div>
     </div>
   </div>
 </section>
@@ -87,15 +146,56 @@ import { url } from '../lib/site';
       busy = false;
     });
   }
+
+  // Desk objects can be picked up and dropped anywhere, like things on a real desk.
+  let top = 10;
+  for (const el of document.querySelectorAll<HTMLElement>('[data-drag]')) {
+    let startX = 0;
+    let startY = 0;
+    let baseX = 0;
+    let baseY = 0;
+    el.addEventListener('pointerdown', (e) => {
+      el.setPointerCapture(e.pointerId);
+      el.classList.add('held');
+      el.style.zIndex = String(++top);
+      startX = e.clientX;
+      startY = e.clientY;
+      [baseX, baseY] = (el.style.translate || '0px 0px').split(' ').map((v) => parseFloat(v) || 0);
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!el.hasPointerCapture(e.pointerId)) return;
+      el.style.translate = `${baseX + e.clientX - startX}px ${baseY + e.clientY - startY}px`;
+    });
+    const drop = () => el.classList.remove('held');
+    el.addEventListener('pointerup', drop);
+    el.addEventListener('pointercancel', drop);
+  }
 </script>
 
 <style>
+  /* The hero is a desk: a faint dot grid that fades out towards the next section */
   .hero {
-    padding-top: clamp(2.5rem, 9vh, 6rem);
-    padding-bottom: clamp(4rem, 12vh, 8rem);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--ink) 22%, transparent) 1px, transparent 1.3px);
+    background-size: 22px 22px;
+    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent);
+    mask-image: linear-gradient(to bottom, black 55%, transparent);
+  }
+  .hero-inner {
+    padding-top: clamp(2.5rem, 8vh, 5rem);
+    padding-bottom: clamp(4rem, 12vh, 7rem);
   }
 
   .headword {
+    position: relative;
+    z-index: 2;
     margin: 0 0 clamp(1.5rem, 4vw, 3rem) -0.04em;
     font-family: var(--sans);
     font-size: clamp(4.5rem, 29vw, 27rem);
@@ -103,8 +203,9 @@ import { url } from '../lib/site';
     font-stretch: 75%;
     line-height: 0.82;
     letter-spacing: -0.02em;
+    pointer-events: none;
   }
-  .word { display: inline-block; white-space: nowrap; }
+  .word { display: inline-block; white-space: nowrap; pointer-events: auto; }
   .word :global(.letter) { display: inline-block; }
   /* Syllable dots, drawn as small red circles so they sit cleanly between letters */
   .word :global(.dot) {
@@ -118,22 +219,36 @@ import { url } from '../lib/site';
     overflow: hidden;
   }
 
-  /* The definition sits on the right two thirds, like the body of an entry */
-  .entry {
-    max-width: 40rem;
-    margin-left: auto;
-    margin-right: clamp(0rem, 6vw, 6rem);
+  /* Below the name: the entry on the left, the desk on the right */
+  .below {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 5vw, 5rem);
+    align-items: start;
   }
   .pron {
+    position: relative;
     margin: 0 0 1.25rem;
     font-size: var(--step-1);
     color: var(--ink-soft);
   }
-  .pron span { font-style: normal; margin-right: 0.4em; }
+  .ipa { font-style: normal; margin-right: 0.4em; }
+  .note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: 1rem;
+    font-family: var(--hand);
+    font-size: 1.35em;
+    line-height: 1;
+    color: var(--ink);
+    rotate: -3deg;
+    white-space: nowrap;
+  }
   .senses {
     margin: 0;
     padding-left: 1.6em;
-    font-size: clamp(1.3rem, 1.05rem + 1vw, 1.75rem);
+    font-size: clamp(1.3rem, 1.05rem + 0.8vw, 1.65rem);
     line-height: 1.35;
   }
   .senses li { padding-left: 0.3em; }
@@ -152,34 +267,195 @@ import { url } from '../lib/site';
     margin: 2.25rem 0 0 1.6rem;
   }
 
-  /* The one choreographed moment: the name unscrambles, then the entry is read in */
-  :global(.hero-intro) .entry > * {
+  /* Desk objects. Sizes are in em so the whole desk scales from one font-size. */
+  .desk {
+    position: relative;
+    height: 25em;
+    margin-top: -1rem;
+    font-size: clamp(0.8rem, 0.55rem + 0.5vw, 1rem);
+  }
+  .obj {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    rotate: var(--r);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    box-shadow: 0 1px 2px rgb(14 20 70 / 0.12), 0 10px 24px -8px rgb(14 20 70 / 0.28);
+    transition: box-shadow 160ms ease, scale 160ms ease;
+  }
+  .obj.held {
+    cursor: grabbing;
+    scale: 1.06;
+    box-shadow: 0 2px 4px rgb(14 20 70 / 0.12), 0 24px 40px -10px rgb(14 20 70 / 0.35);
+  }
+
+  /* Speaker badge on a lanyard */
+  .badge { width: 12.5em; box-shadow: none; }
+  .strap {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 1.6em;
+    height: 6em;
+    translate: -50% 0;
+    background: repeating-linear-gradient(45deg, var(--tally) 0 0.5em, #c93b40 0.5em 1em);
+    -webkit-mask-image: linear-gradient(to top, black 35%, transparent);
+    mask-image: linear-gradient(to top, black 35%, transparent);
+  }
+  .card {
+    position: relative;
+    display: grid;
+    border-radius: 0.6em;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgb(14 20 70 / 0.12), 0 14px 30px -8px rgb(14 20 70 / 0.3);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0.7em;
+    left: 50%;
+    width: 2.6em;
+    height: 0.5em;
+    translate: -50% 0;
+    border-radius: 1em;
+    background: #e6e9f5;
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.2);
+  }
+  .badge-top {
+    padding: 1.9em 1em 0.6em;
+    background: #1e32b4;
+    color: #fff;
+    font-family: var(--sans);
+    font-size: 0.8em;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .badge-name {
+    padding: 0.7em 0.6em 0.1em;
+    color: #1e32b4;
+    font-family: var(--sans);
+    font-size: 1.9em;
+    font-weight: 800;
+    font-stretch: 80%;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+  .badge-sub {
+    padding: 0 1em 1.3em;
+    color: #4a56a6;
+    font-family: var(--serif);
+    font-size: 0.85em;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* Cinema ticket, perforated stub on the right */
+  .ticket {
+    display: flex;
+    width: 17em;
+    border-radius: 0.35em;
+    background: var(--tally);
+    color: #fff;
+    -webkit-mask: radial-gradient(circle at 12.6em 0, transparent 0.45em, black 0.47em) top / 100% 51% no-repeat,
+      radial-gradient(circle at 12.6em 100%, transparent 0.45em, black 0.47em) bottom / 100% 51% no-repeat;
+    mask: radial-gradient(circle at 12.6em 0, transparent 0.45em, black 0.47em) top / 100% 51% no-repeat,
+      radial-gradient(circle at 12.6em 100%, transparent 0.45em, black 0.47em) bottom / 100% 51% no-repeat;
+  }
+  .ticket-main { display: grid; width: 12.6em; padding: 1em 1.1em; border-right: 2px dashed rgb(255 255 255 / 0.55); }
+  .ticket-kicker { font-family: var(--sans); font-size: 0.72em; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; }
+  .ticket-title { font-family: var(--sans); font-size: 2em; font-weight: 800; font-stretch: 78%; letter-spacing: -0.02em; line-height: 1.05; }
+  .ticket-meta { font-family: var(--serif); font-size: 0.9em; font-style: italic; }
+  .ticket-stub {
+    display: grid;
+    place-items: center;
+    flex: 1;
+    font-family: var(--sans);
+    font-size: 0.75em;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  /* Sticky note in her handwriting */
+  .sticky {
+    display: grid;
+    width: 12em;
+    padding: 1.1em 1.1em 1.3em;
+    background: #ffe680;
+    color: #1e2a8f;
+    font-family: var(--hand);
+    line-height: 1.1;
+  }
+  .sticky-label { font-size: 1.1em; opacity: 0.75; }
+  .sticky-word { font-size: 2.3em; font-weight: 700; }
+  .sticky-def { font-size: 1.25em; }
+
+  /* Polaroid, shown once public/portrait.jpg exists */
+  .polaroid { width: 11em; padding: 0.6em 0.6em 0; background: #fff; }
+  .polaroid img { width: 100%; aspect-ratio: 1; object-fit: cover; pointer-events: none; }
+  .polaroid span { display: block; padding: 0.4em 0 0.6em; font-family: var(--hand); font-size: 1.3em; color: #1e2a8f; text-align: center; }
+
+  /* Wooden letter tiles */
+  .tile {
+    display: grid;
+    place-items: center;
+    width: 2.9em;
+    height: 2.9em;
+    border-radius: 0.3em;
+    background: #f1dcae;
+    color: #1e2a8f;
+    font-family: var(--sans);
+    font-size: 1.15em;
+    font-weight: 800;
+    box-shadow: inset 0 -0.18em 0 #d6bb82, 0 6px 12px -4px rgb(14 20 70 / 0.3);
+  }
+  .tile small { position: absolute; right: 0.35em; bottom: 0.3em; font-size: 0.42em; font-weight: 700; }
+
+  /* The one choreographed moment: the name unscrambles, then the entry is read in
+     and the desk things drop into place */
+  :global(.hero-intro) .entry > *,
+  :global(.hero-intro) .obj {
     opacity: 0;
     transform: translateY(0.6rem);
-    transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.7,.2,1);
+    transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.7,.2,1), box-shadow 160ms ease, scale 160ms ease;
   }
-  :global(.hero-settled) .entry > * { opacity: 1; transform: none; }
+  :global(.hero-intro) .obj { transform: translateY(-1.5rem); }
+  :global(.hero-settled) .entry > *,
+  :global(.hero-settled) .obj { opacity: 1; transform: none; }
   :global(.hero-settled) .entry > :nth-child(2) { transition-delay: 120ms; }
   :global(.hero-settled) .entry > :nth-child(3) { transition-delay: 240ms; }
   :global(.hero-settled) .entry > :nth-child(4) { transition-delay: 360ms; }
+  :global(.hero-settled) .obj { transition-delay: calc(300ms + var(--i) * 90ms), calc(300ms + var(--i) * 90ms), 0ms, 0ms; transition-timing-function: ease, cubic-bezier(.3,1.6,.5,1), ease, ease; }
 
-  /* On a phone the hero is one full screen, with the whole entry centred in it */
+  @media (max-width: 60rem) {
+    .below { grid-template-columns: 1fr; }
+    .desk { order: -1; height: 15em; margin: 0 0 1rem; font-size: 0.8rem; }
+    .badge { --x: 2% !important; --y: 4% !important; }
+  }
+
+  /* On a phone: the desk sits above the name, then the entry and buttons */
   @media (max-width: 40rem) {
-    .hero {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: calc(100svh - 4rem);
-      padding-top: 1rem;
-      padding-bottom: 2.5rem;
-    }
-    .headword { font-size: 30.5vw; margin-bottom: 1.5rem; }
-    .entry { margin: 0; }
+    .hero-inner { padding-top: 0; padding-bottom: 2.25rem; }
+    .headword { font-size: 30.5vw; margin-bottom: 1.25rem; }
+    .below { display: contents; }
+    .hero-inner { display: flex; flex-direction: column; }
+    .desk { order: -1; height: 13rem; margin: 0 0 0.25rem; font-size: 0.62rem; }
+    .badge { --y: 4em !important; }
+    .ticket { --x: 46% !important; --y: 14% !important; }
+    .sticky { --x: 63% !important; --y: 52% !important; }
+    .tile:nth-of-type(n) { --y: 80% !important; }
     .pron { font-size: 1.05rem; margin-bottom: 0.9rem; }
+    .note { display: flex; margin: 0.4rem 0 0 0; font-size: 1.3rem; }
     .senses { font-size: 1.2rem; line-height: 1.4; padding-left: 1.3em; }
     .senses li { padding-left: 0.2em; }
     .example { margin: 1rem 0 0 1.5em; font-size: 1rem; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 1.75rem 0 0; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 1.5rem 0 0; }
     .actions .button { padding-inline: 0.75rem; font-size: 0.95rem; }
   }
 </style>
