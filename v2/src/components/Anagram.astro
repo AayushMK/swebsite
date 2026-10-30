@@ -6,11 +6,19 @@ const pairs = [
   ['heart', 'earth', 'Move one letter and heart becomes earth. Most of what I write lives somewhere between the two.'],
 ];
 const [first, , caption] = pairs[0];
+
+// Scrabble points, printed in the corner of each tile
+const POINTS: Record<string, number> = {
+  a: 1, b: 3, c: 3, d: 2, e: 1, f: 4, g: 2, h: 4, i: 1, j: 8, k: 5, l: 1, m: 3,
+  n: 1, o: 1, p: 3, q: 10, r: 1, s: 1, t: 1, u: 1, v: 4, w: 4, x: 8, y: 4, z: 10,
+};
 ---
-<section class="anagram wrap" aria-labelledby="anagram-title" data-anagram data-pairs={JSON.stringify(pairs)}>
+<section class="anagram wrap" aria-labelledby="anagram-title" data-anagram data-pairs={JSON.stringify(pairs)} data-points={JSON.stringify(POINTS)}>
   <h2 id="anagram-title" class="visually-hidden">A bit of wordplay</h2>
   <p class="word" aria-hidden="true">
-    {[...first].map((ch) => <span class="letter">{ch}</span>)}
+    {[...first].map((ch) => (
+      <span class="letter wood-tile" data-ch={ch}>{ch.toUpperCase()}<small>{POINTS[ch]}</small></span>
+    ))}
   </p>
   <p class="visually-hidden" aria-live="polite" data-said>{first}</p>
   <div class="foot">
@@ -20,7 +28,7 @@ const [first, , caption] = pairs[0];
 </section>
 
 <script>
-  import { arrange, flip, letterSpans, swapIn, swapOut } from '../lib/shuffle';
+  import { arrange, flip, swapIn, swapOut } from '../lib/shuffle';
 
   const root = document.querySelector<HTMLElement>('[data-anagram]');
   if (root) {
@@ -29,6 +37,18 @@ const [first, , caption] = pairs[0];
     const said = root.querySelector<HTMLElement>('[data-said]')!;
     const caption = root.querySelector<HTMLElement>('[data-caption]')!;
     const button = root.querySelector<HTMLButtonElement>('[data-rearrange]')!;
+    const points: Record<string, number> = JSON.parse(root.dataset.points!);
+    const tiles = (w: string) =>
+      [...w].map((ch) => {
+        const tile = document.createElement('span');
+        tile.className = 'letter wood-tile';
+        tile.dataset.ch = ch;
+        tile.textContent = ch.toUpperCase();
+        const pts = document.createElement('small');
+        pts.textContent = String(points[ch]);
+        tile.append(pts);
+        return tile;
+      });
     let pair = 0;
     let side = 0;
     let busy = false;
@@ -45,7 +65,7 @@ const [first, , caption] = pairs[0];
         pair = (pair + 1) % pairs.length;
         side = 0;
         await swapOut(letters);
-        const next = letterSpans(pairs[pair][0]);
+        const next = tiles(pairs[pair][0]);
         word.replaceChildren(...next);
         caption.textContent = pairs[pair][2];
         said.textContent = pairs[pair][0];
@@ -88,18 +108,14 @@ const [first, , caption] = pairs[0];
   .anagram {
     padding-block: var(--section);
   }
+  /* The word is spelled in the same wooden tiles that sit on the desk up top */
   .word {
-    margin: 0 0 1.5rem -0.04em;
-    font-family: var(--sans);
-    font-size: clamp(4.5rem, 22vw, 18rem);
-    font-weight: 800;
-    font-stretch: 75%;
-    line-height: 0.85;
-    letter-spacing: -0.03em;
-    white-space: nowrap;
+    display: flex;
+    gap: 0.14em;
     width: fit-content;
+    margin: 0 0 2rem;
+    font-size: clamp(2.4rem, 10.5vw, 6.5rem);
   }
-  .word :global(.letter) { display: inline-block; }
   .foot {
     display: flex;
     flex-wrap: wrap;
@@ -116,7 +132,7 @@ const [first, , caption] = pairs[0];
     min-height: 2.7em;
   }
   @media (max-width: 40rem) {
-    .word { font-size: 34vw; margin-bottom: 1rem; }
+    .word { margin-bottom: 1.5rem; }
     .caption { min-height: 4.1em; }
   }
 </style>

@@ -5,19 +5,20 @@ import { getPosts } from '../../lib/site';
 
 const posts = getPosts();
 ---
-<Base title="Writing" description="Essays by Shrutika on everyday life, society and film.">
+<Base title="Writing" description="Essays by Shrutika on everyday life, society and film." desk>
   <section class="wrap page">
     <h1 class="section-title">Writing</h1>
     <p class="intro">
       Essays on everyday life, the society around us, and the films that stay with us. Some are
       about things that happened to me. Most are about people.
     </p>
-    <PostRows posts={posts} />
+    <div class="sheet paper"><PostRows posts={posts} /></div>
   </section>
 </Base>
 
 <style>
   .page { padding-block: clamp(3rem, 8vw, 5rem) 2rem; }
   h1 { font-size: var(--step-4); }
+  .sheet { padding: 0.25rem clamp(1.25rem, 3vw, 2.5rem); }
   .intro { max-width: var(--measure); margin: 1.5rem 0 3rem; font-size: var(--step-1); line-height: 1.4; }
 </style>

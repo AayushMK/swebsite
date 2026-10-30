@@ -10,8 +10,9 @@ import { SITE, url } from '../lib/site';
 interface Props {
   title?: string;
   description?: string;
+  desk?: boolean; // dotted desk background, used on the home page
 }
-const { title, description = SITE.description } = Astro.props;
+const { title, description = SITE.description, desk = false } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name}, writer and speaker`;
 ---
 <!doctype html>
@@ -27,7 +28,7 @@ const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name}, writer and 
     <meta name="theme-color" content="#1e32b4" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
   </head>
-  <body>
+  <body class={desk ? 'desk' : undefined}>
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="wrap bar">

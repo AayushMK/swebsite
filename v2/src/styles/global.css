@@ -13,6 +13,15 @@
   --stage-soft: #c3cbf5;
   --tally: #e5484d;
 
+  /* Things on the desk: white cards and wooden letter tiles */
+  --card: #ffffff;
+  --card-shadow: 0 1px 2px rgb(14 20 70 / 0.08), 0 14px 30px -14px rgb(14 20 70 / 0.25);
+  --card-radius: 0.75rem;
+  --dots: color-mix(in srgb, var(--ink) 16%, transparent);
+  --wood: #f1dcae;
+  --wood-edge: #d6bb82;
+  --wood-ink: #1e2a8f;
+
   --sans: 'Bricolage Grotesque Variable', 'Avenir Next', system-ui, sans-serif;
   --serif: 'Newsreader Variable', Georgia, serif;
   --hand: 'Caveat', 'Bradley Hand', cursive; /* her handwriting: notes and objects only */
@@ -42,6 +51,8 @@
     --stage: #1b2470;
     --stage-text: #f4f5f8;
     --stage-soft: #b7c0f2;
+    --card: #161d58;
+    --card-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 30px -14px rgb(0 0 0 / 0.6);
     color-scheme: dark;
   }
 }
@@ -64,6 +75,42 @@ body {
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* The home page is one desk: a faint dot grid under everything */
+body.desk {
+  background-image: radial-gradient(circle, var(--dots) 1px, transparent 1.3px);
+  background-size: 22px 22px;
+}
+
+/* A sheet of paper lying on the desk. Straight, never tilted, so content stays easy to read. */
+.paper {
+  background: var(--card);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+}
+
+/* Wooden letter tile, shared by the desk and the anagram. Its font-size is the letter size. */
+.wood-tile {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 1.25em;
+  height: 1.3em;
+  line-height: 1;
+  border-radius: 0.12em;
+  background: var(--wood);
+  color: var(--wood-ink);
+  font-family: var(--sans);
+  font-weight: 800;
+  box-shadow: inset 0 -0.07em 0 var(--wood-edge), 0 6px 14px -6px rgb(14 20 70 / 0.35);
+}
+.wood-tile small {
+  position: absolute;
+  right: 0.5em;
+  bottom: 0.35em;
+  font-size: 0.3em;
+  font-weight: 700;
 }
 
 ::selection { background: var(--ink); color: var(--paper); }

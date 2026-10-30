@@ -8,20 +8,12 @@ const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)')
 const within = (promise: Promise<unknown>, ms: number) =>
   Promise.race([promise, new Promise((resolve) => setTimeout(resolve, ms))]);
 
-export function letterSpans(word: string) {
-  return [...word].map((ch) => {
-    const span = document.createElement('span');
-    span.className = 'letter';
-    span.textContent = ch;
-    return span;
-  });
-}
-
 // Picks existing letter nodes to spell `word`, reusing each node once.
+// A node's letter is its data-ch, or its text when it has none.
 export function arrange(letters: HTMLElement[], word: string) {
   const pool = [...letters];
   return [...word].map((ch) => {
-    const i = pool.findIndex((el) => el.textContent?.toLowerCase() === ch.toLowerCase());
+    const i = pool.findIndex((el) => (el.dataset.ch ?? el.textContent)?.toLowerCase() === ch.toLowerCase());
     return pool.splice(i, 1)[0];
   });
 }

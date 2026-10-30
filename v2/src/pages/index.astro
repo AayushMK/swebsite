@@ -56,11 +56,25 @@ const glossary = [
   },
 ];
 ---
-<Base>
+<Base desk>
   <Hero />
 
   <section id="about" class="about wrap" aria-labelledby="about-title">
-    <h2 id="about-title" class="section-title">Hello.<br />Hallo.</h2>
+    <div class="about-side">
+      <h2 id="about-title" class="section-title">Hello.<br />Hallo.</h2>
+      <!-- Styled like the speaker badge on the desk above -->
+      <aside class="profile paper" aria-label="At a glance">
+        <p class="profile-top">At a glance</p>
+        <dl class="facts">
+          <div><dt>Studied</dt><dd>BA in Psychology</dd></div>
+          <!-- Add any other languages you speak here. -->
+          <div><dt>Languages</dt><dd>English, German</dd></div>
+          <div><dt>Writes about</dt><dd>Life, society and film</dd></div>
+          <!-- Shrutika: change this to the kind of work you are looking for. -->
+          <div><dt>Open to</dt><dd>Communications, advocacy and mental health work</dd></div>
+        </dl>
+      </aside>
+    </div>
     <div class="about-body">
       {HAS_PORTRAIT && <img class="portrait" src={url('portrait.jpg')} alt="Portrait of Shrutika" width="480" height="600" />}
       <!-- Shrutika: rewrite this in your own words. -->
@@ -73,14 +87,6 @@ const glossary = [
         whenever I get the chance, I say those ideas out loud to a room full of people, which is my
         favourite thing to do.
       </p>
-      <dl class="facts">
-        <div><dt>Studied</dt><dd>BA in Psychology</dd></div>
-        <!-- Add any other languages you speak here. -->
-        <div><dt>Languages</dt><dd>English, German</dd></div>
-        <div><dt>Writes about</dt><dd>Life, society and film</dd></div>
-        <!-- Shrutika: change this to the kind of work you are looking for. -->
-        <div><dt>Open to</dt><dd>Communications, advocacy and mental health work</dd></div>
-      </dl>
       {HAS_CV && <a class="button quiet" href={url('cv.pdf')} download>Download my CV (PDF)</a>}
     </div>
   </section>
@@ -90,7 +96,7 @@ const glossary = [
       <h2 id="writing-title" class="section-title">Writing</h2>
       <a href={url('writing/')}>All writing</a>
     </div>
-    <PostRows posts={posts} />
+    <div class="sheet paper"><PostRows posts={posts} /></div>
   </section>
 
   <Anagram />
@@ -138,11 +144,13 @@ const glossary = [
     </div>
     <dl class="entries">
       {glossary.map((entry) => (
-        <div class="entry">
+        <div class="entry paper">
           <dt>
             <span class="article">{entry.article}</span>
             <span class="compound" lang="de">
-              {entry.parts.map(([part]) => <span class="part">{part}</span>)}
+              {entry.parts.map(([part], i) => (
+                <>{i > 0 && <wbr />}<span class="part">{part}</span></>
+              ))}
             </span>
             <span class="literal">
               {entry.parts.map(([, gloss]) => <span>{gloss}</span>)}
@@ -185,20 +193,27 @@ const glossary = [
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
     gap: 2rem clamp(2rem, 6vw, 6rem);
     padding-block: var(--section);
-    border-top: 1.5px solid var(--ink);
   }
   .about .section-title { font-size: var(--step-4); }
   .about-body { max-width: var(--measure); }
   .about-body p { margin: 0 0 1.1em; }
   .lead { font-size: var(--step-1); line-height: 1.4; }
   .portrait { width: 100%; max-width: 20rem; height: auto; margin-bottom: 2rem; border-radius: 4px; }
-  .facts {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem 2rem;
-    margin: 2.25rem 0;
+  .profile { max-width: 24rem; margin-top: 2.5rem; overflow: hidden; }
+  .profile-top {
+    margin: 0;
+    padding: 0.8rem 1.25rem;
+    background: #1e32b4;
+    color: #fff;
     font-family: var(--sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
   }
+  .facts { margin: 0; padding: 0.4rem 1.25rem; font-family: var(--sans); }
+  .facts > div { padding-block: 0.8rem; }
+  .facts > div + div { border-top: 1px solid var(--mist); }
   .facts dt { font-size: var(--step--1); color: var(--ink-soft); }
   .facts dd { margin: 0.15rem 0 0; font-weight: 600; line-height: 1.3; }
 
@@ -212,6 +227,7 @@ const glossary = [
     margin-bottom: 2rem;
   }
   .head a { font-family: var(--sans); font-weight: 600; }
+  .sheet { padding: 0.25rem clamp(1.25rem, 3vw, 2.5rem); }
 
   /* Speaking: the one section printed in reverse, ink as the background */
   .stage {
@@ -280,7 +296,7 @@ const glossary = [
     gap: 3rem clamp(1.5rem, 4vw, 3.5rem);
     margin: 0;
   }
-  .entry { border-top: 1.5px solid var(--ink); padding-top: 1rem; }
+  .entry { padding: 1.4rem 1.5rem 1.6rem; }
   .entry dt { display: grid; }
   .article { font-style: italic; color: var(--ink-soft); }
   .compound {
@@ -290,7 +306,7 @@ const glossary = [
     font-stretch: 85%;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
   .part { transition: margin 220ms ease; }
   .literal {
@@ -311,7 +327,6 @@ const glossary = [
   /* Contact */
   .contact {
     padding-block: var(--section) clamp(2.5rem, 8vw, 5rem);
-    border-top: 1.5px solid var(--ink);
   }
   .say {
     margin: 0;
@@ -349,7 +364,8 @@ const glossary = [
     .about { gap: 1.5rem; }
     .about .section-title { font-size: 2.6rem; }
     .lead { font-size: 1.25rem; }
-    .facts { gap: 1rem 1.25rem; margin: 1.75rem 0; }
+    .about-side { display: contents; }
+    .profile { order: 3; margin-top: 0.5rem; }
     .facts dd { font-size: 1rem; }
     .head { margin-bottom: 1.25rem; }
     .stage-grid { gap: 2.5rem; }
@@ -363,7 +379,7 @@ const glossary = [
       display: flex;
       gap: 1rem;
       margin-inline: calc(var(--gutter) * -1);
-      padding: 0 var(--gutter) 0.75rem;
+      padding: 0.25rem var(--gutter) 1.75rem;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scroll-padding-inline: var(--gutter);
