@@ -54,7 +54,8 @@ const { posts } = Astro.props;
   .desc { display: block; margin-top: 0.4rem; color: var(--ink-soft); line-height: 1.45; max-width: 34rem; }
   a:hover .title, a:focus-visible .title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.15em; }
   @media (max-width: 44rem) {
-    a { grid-template-columns: 1fr; }
+    a { grid-template-columns: 1fr; padding-block: 1.25rem; }
+    .desc { font-size: 1rem; }
     .meta { display: flex; gap: 1rem; justify-items: start; }
     time { order: -1; }
   }

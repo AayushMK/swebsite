@@ -172,7 +172,7 @@ const glossary = [
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
     gap: 2rem clamp(2rem, 6vw, 6rem);
-    padding-block: clamp(4rem, 10vw, 7rem);
+    padding-block: var(--section);
     border-top: 1.5px solid var(--ink);
   }
   .about .section-title { font-size: var(--step-4); }
@@ -205,7 +205,7 @@ const glossary = [
   .stage {
     background: var(--stage);
     color: var(--stage-text);
-    padding-block: clamp(4.5rem, 11vw, 8rem);
+    padding-block: var(--section);
   }
   .stage ::selection { background: var(--stage-text); color: var(--stage); }
   .stage-grid {
@@ -253,7 +253,7 @@ const glossary = [
   .talks dd { margin: 0.35rem 0 0; color: var(--stage-soft); line-height: 1.45; }
 
   /* Glossary */
-  .glossary { padding-block: clamp(4.5rem, 11vw, 8rem); }
+  .glossary { padding-block: var(--section); }
   .glossary-head {
     display: grid;
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
@@ -298,7 +298,7 @@ const glossary = [
 
   /* Contact */
   .contact {
-    padding-block: clamp(4rem, 10vw, 7rem) clamp(3rem, 8vw, 5rem);
+    padding-block: var(--section) clamp(2.5rem, 8vw, 5rem);
     border-top: 1.5px solid var(--ink);
   }
   .say {
@@ -327,8 +327,38 @@ const glossary = [
   @media (max-width: 48rem) {
     .about, .stage-grid, .glossary-head { grid-template-columns: 1fr; }
   }
-  @media (max-width: 34rem) {
-    .entries { grid-template-columns: 1fr; }
-    .facts { grid-template-columns: 1fr; }
+
+  /* Phones: tighter rhythm, and the glossary becomes a row you swipe through */
+  @media (max-width: 40rem) {
+    .about { gap: 1.5rem; }
+    .about .section-title { font-size: 2.6rem; }
+    .lead { font-size: 1.25rem; }
+    .facts { gap: 1rem 1.25rem; margin: 1.75rem 0; }
+    .facts dd { font-size: 1rem; }
+    .head { margin-bottom: 1.25rem; }
+    .stage-grid { gap: 2.5rem; }
+    .stage-intro p:not(.status) { margin: 1.25rem 0 1.5rem; font-size: 1.15rem; line-height: 1.5; }
+    .talks dl > div { padding-block: 1rem; }
+    .talks dt { font-size: 1.2rem; }
+    .talks dd { font-size: 1rem; }
+    .glossary-head { gap: 1rem; margin-bottom: 1.75rem; }
+    .glossary-head p { font-size: 1rem; }
+    .entries {
+      display: flex;
+      gap: 1rem;
+      margin-inline: calc(var(--gutter) * -1);
+      padding: 0 var(--gutter) 0.75rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+    .entries::-webkit-scrollbar { display: none; }
+    .entry { flex: 0 0 82%; scroll-snap-align: start; }
+    .entry dd { font-size: 1rem; }
+    .meaning { font-size: 1.2rem; }
+    .say { font-size: 22vw; }
+    .contact-note { margin-top: 1.5rem; font-size: 1rem; }
+    .email { font-size: 1.35rem; }
   }
 </style>

@@ -86,7 +86,7 @@ const [first, , caption] = pairs[0];
 
 <style>
   .anagram {
-    padding-block: clamp(4rem, 12vw, 9rem);
+    padding-block: var(--section);
   }
   .word {
     margin: 0 0 1.5rem -0.04em;
@@ -114,5 +114,9 @@ const [first, , caption] = pairs[0];
     line-height: 1.35;
     font-style: italic;
     min-height: 2.7em;
+  }
+  @media (max-width: 40rem) {
+    .word { font-size: 34vw; margin-bottom: 1rem; }
+    .caption { min-height: 4.1em; }
   }
 </style>
