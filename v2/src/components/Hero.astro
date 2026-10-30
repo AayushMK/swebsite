@@ -1,0 +1,171 @@
+---
+import { url } from '../lib/site';
+---
+<section class="hero wrap" aria-labelledby="hero-title">
+  <h1 id="hero-title" class="headword">
+    <span class="visually-hidden">Shrutika</span>
+    <span class="word" aria-hidden="true" data-headword>
+      <span class="letter">s</span><span class="letter">h</span><span class="letter">r</span><span class="letter">u</span><span class="dot">·</span><span class="letter">t</span><span class="letter">i</span><span class="dot">·</span><span class="letter">k</span><span class="letter">a</span>
+    </span>
+  </h1>
+  <script is:inline>
+    // Start the name scrambled so it can sort itself out once the fonts load.
+    // Without JavaScript, or with reduced motion, the name simply shows as is.
+    (function () {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var word = document.querySelector('[data-headword]');
+      var letters = Array.prototype.slice.call(word.querySelectorAll('.letter'));
+      var byChar = {};
+      letters.forEach(function (el) { byChar[el.textContent] = el; });
+      word.replaceChildren.apply(word, 'kathirus'.split('').map(function (c) { return byChar[c]; }));
+      word.dataset.scrambled = 'true';
+      document.documentElement.classList.add('hero-intro');
+      setTimeout(function () { document.documentElement.classList.add('hero-settled'); }, 6000);
+    })();
+  </script>
+
+  <div class="entry">
+    <p class="pron"><span>/ʃru·ti·kaː/</span> <i>noun</i></p>
+    <ol class="senses">
+      <li>From Sanskrit <i>śruti</i>, “that which is heard.”</li>
+      <li>A psychology graduate who writes about people, and then says it out loud, in English or auf Deutsch.</li>
+    </ol>
+    <p class="example">“Ask Shrutika. She’ll have the word for it.”</p>
+    <div class="actions">
+      <a class="button primary" href={url('writing/')}>Read my writing</a>
+      <a class="button quiet" href={url('#speaking')}>Invite me to speak</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { arrange, flip } from '../lib/shuffle';
+
+  const word = document.querySelector<HTMLElement>('[data-headword]');
+  if (word) {
+    let busy = false;
+    const letters = () => [...word.querySelectorAll<HTMLElement>('.letter')];
+    const dot = () => {
+      const el = document.createElement('span');
+      el.className = 'dot';
+      el.textContent = '·';
+      return el;
+    };
+    const settle = () => {
+      const [s, h, r, u, t, i, k, a] = arrange(letters(), 'shrutika');
+      return flip(word, [s, h, r, u, dot(), t, i, dot(), k, a], { duration: 950, stagger: 55 });
+    };
+    // A fresh random jumble each time, never the name itself.
+    const scramble = () => {
+      let order = letters();
+      while (order.map((el) => el.textContent).join('') === 'shrutika') {
+        order = order.map((el) => [Math.random(), el] as const).sort((x, y) => x[0] - y[0]).map(([, el]) => el);
+      }
+      return flip(word, order, { duration: 650, stagger: 30 });
+    };
+
+    if (word.dataset.scrambled) {
+      // Wait for the fonts so letters don't jump, but never keep the name scrambled for long.
+      const fontsOrTimeout = Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]);
+      busy = true;
+      fontsOrTimeout
+        .then(() => new Promise((r) => setTimeout(r, 500)))
+        .then(settle)
+        .then(() => {
+          document.documentElement.classList.add('hero-settled');
+          busy = false;
+        });
+    }
+
+    // Hovering (or tapping) the name jumbles it and lets it sort itself out again.
+    word.addEventListener('pointerenter', async () => {
+      if (busy || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      busy = true;
+      await scramble();
+      await new Promise((r) => setTimeout(r, 250));
+      await settle();
+      busy = false;
+    });
+  }
+</script>
+
+<style>
+  .hero {
+    padding-top: clamp(2.5rem, 9vh, 6rem);
+    padding-bottom: clamp(4rem, 12vh, 8rem);
+  }
+
+  .headword {
+    margin: 0 0 clamp(1.5rem, 4vw, 3rem) -0.04em;
+    font-family: var(--sans);
+    font-size: clamp(4.5rem, 29vw, 27rem);
+    font-weight: 800;
+    font-stretch: 75%;
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+  }
+  .word { display: inline-block; white-space: nowrap; }
+  .word :global(.letter) { display: inline-block; }
+  /* Syllable dots, drawn as small red circles so they sit cleanly between letters */
+  .word :global(.dot) {
+    display: inline-block;
+    width: 0.11em;
+    height: 0.11em;
+    margin: 0 0.05em 0.2em;
+    border-radius: 50%;
+    background: var(--tally);
+    color: transparent;
+    overflow: hidden;
+  }
+
+  /* The definition sits on the right two thirds, like the body of an entry */
+  .entry {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: clamp(0rem, 6vw, 6rem);
+  }
+  .pron {
+    margin: 0 0 1.25rem;
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+  .pron span { font-style: normal; margin-right: 0.4em; }
+  .senses {
+    margin: 0;
+    padding-left: 1.6em;
+    font-size: clamp(1.3rem, 1.05rem + 1vw, 1.75rem);
+    line-height: 1.35;
+  }
+  .senses li { padding-left: 0.3em; }
+  .senses li + li { margin-top: 0.6em; }
+  .senses li::marker { font-family: var(--sans); font-weight: 700; font-size: 0.8em; }
+  .example {
+    margin: 1.4rem 0 0 1.95em;
+    font-size: var(--step-0);
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 2.25rem 0 0 1.6rem;
+  }
+
+  /* The one choreographed moment: the name unscrambles, then the entry is read in */
+  :global(.hero-intro) .entry > * {
+    opacity: 0;
+    transform: translateY(0.6rem);
+    transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.7,.2,1);
+  }
+  :global(.hero-settled) .entry > * { opacity: 1; transform: none; }
+  :global(.hero-settled) .entry > :nth-child(2) { transition-delay: 120ms; }
+  :global(.hero-settled) .entry > :nth-child(3) { transition-delay: 240ms; }
+  :global(.hero-settled) .entry > :nth-child(4) { transition-delay: 360ms; }
+
+  @media (max-width: 40rem) {
+    .entry { margin: 0; }
+    .actions { margin-left: 0; }
+    .example { margin-left: 1.6em; }
+  }
+</style>

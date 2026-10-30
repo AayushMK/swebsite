@@ -15,7 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: withastro/action@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Main site, served at /swebsite/
+      - run: npm ci
+      - run: npm run build
+      # Alternative design, served at /swebsite/v2/
+      - run: npm ci --prefix v2
+      - run: npm run build --prefix v2
+      - run: cp -r v2/dist dist/v2
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
 
   deploy:
     needs: build

@@ -1,0 +1,334 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Anagram from '../components/Anagram.astro';
+import PostRows from '../components/PostRows.astro';
+import { SITE, HAS_CV, HAS_PORTRAIT, getPosts, url } from '../lib/site';
+
+const posts = getPosts().slice(0, 4);
+const invite = `mailto:${SITE.email}?subject=${encodeURIComponent('Speaking invitation')}`;
+
+// Talks drawn from what Shrutika already writes about. Shrutika: edit freely.
+const talks = [
+  ['“Fine, thanks”', 'Why we hide what we are going through, and how to make asking for help feel normal.'],
+  ['The invisible rulebook', 'Social norms, the rules nobody remembers agreeing to, and why we follow them anyway.'],
+  ['Borrowed feelings', 'What films teach us about empathy, and why we keep choosing the ones that make us cry.'],
+  ['Psychology in plain words', 'Mental health and human behaviour, explained without the jargon.'],
+];
+
+// German compound words, split into their parts, and what each one means in practice.
+const glossary = [
+  {
+    article: 'das',
+    parts: [['Sprach', 'language'], ['gefühl', 'feeling']],
+    meaning: 'A feel for language.',
+    practice: 'Clear writing, careful editing, and turning complicated ideas into plain ones.',
+  },
+  {
+    article: 'das',
+    parts: [['Finger', 'finger'], ['spitzen', 'tips'], ['gefühl', 'feeling']],
+    meaning: 'Tact in delicate situations.',
+    practice: 'Sensitive conversations, community work, and knowing when to just listen.',
+  },
+  {
+    article: 'das',
+    parts: [['Lampen', 'lamp'], ['fieber', 'fever']],
+    meaning: 'Stage fright.',
+    practice: 'I still get it before every talk. I go on anyway, and I’m better for it.',
+  },
+  {
+    article: 'das',
+    parts: [['Mit', 'with'], ['gefühl', 'feeling']],
+    meaning: 'Compassion.',
+    practice: 'The reason I studied psychology, and the lens I bring to every topic.',
+  },
+  {
+    article: 'das',
+    parts: [['Kopf', 'head'], ['kino', 'cinema']],
+    meaning: 'The film that plays in your mind.',
+    practice: 'Storytelling, film analysis, and imagining how other people see things.',
+  },
+  {
+    article: 'die',
+    parts: [['Zivil', 'civil'], ['courage', 'courage']],
+    meaning: 'The courage to speak up for others.',
+    practice: 'Writing honestly about society, even when the subject is uncomfortable.',
+  },
+];
+---
+<Base>
+  <Hero />
+
+  <section id="about" class="about wrap" aria-labelledby="about-title">
+    <h2 id="about-title" class="section-title">Hello.<br />Hallo.</h2>
+    <div class="about-body">
+      {HAS_PORTRAIT && <img class="portrait" src={url('portrait.jpg')} alt="Portrait of Shrutika" width="480" height="600" />}
+      <!-- Shrutika: rewrite this in your own words. -->
+      <p class="lead">
+        I’m Shrutika. I studied science at +2, then psychology for my bachelor’s. Science taught me to
+        ask for evidence. Psychology taught me that people rarely act on evidence alone.
+      </p>
+      <p>
+        Now I write about everyday life, the society we live in and the films that stay with me. And
+        whenever I get the chance, I say those ideas out loud to a room full of people, which is my
+        favourite thing to do.
+      </p>
+      <dl class="facts">
+        <div><dt>Studied</dt><dd>BA in Psychology</dd></div>
+        <!-- Add any other languages you speak here. -->
+        <div><dt>Languages</dt><dd>English, German</dd></div>
+        <div><dt>Writes about</dt><dd>Life, society and film</dd></div>
+        <!-- Shrutika: change this to the kind of work you are looking for. -->
+        <div><dt>Open to</dt><dd>Communications, advocacy and mental health work</dd></div>
+      </dl>
+      {HAS_CV && <a class="button quiet" href={url('cv.pdf')} download>Download my CV (PDF)</a>}
+    </div>
+  </section>
+
+  <section id="writing" class="writing wrap" aria-labelledby="writing-title">
+    <div class="head">
+      <h2 id="writing-title" class="section-title">Writing</h2>
+      <a href={url('writing/')}>All writing</a>
+    </div>
+    <PostRows posts={posts} />
+  </section>
+
+  <Anagram />
+
+  <section id="speaking" class="stage" aria-labelledby="speaking-title">
+    <div class="wrap stage-grid">
+      <div class="stage-intro">
+        <p class="status"><span class="tally" aria-hidden="true"></span>Available for talks, panels and events</p>
+        <h2 id="speaking-title" class="section-title">Some ideas are better said out loud.</h2>
+        <p>
+          I love public speaking: the nerves before, the quiet when a room is really listening, and the
+          questions after. I’m happy to give a talk, sit on a panel, run a workshop, or host and moderate
+          an event, in English or German.
+        </p>
+        <a class="button invert" href={invite}>Invite me to speak</a>
+      </div>
+      <div class="talks">
+        <h3>Things I like to talk about</h3>
+        <dl>
+          {talks.map(([title, text]) => (
+            <div><dt>{title}</dt><dd>{text}</dd></div>
+          ))}
+        </dl>
+        <!--
+          Shrutika: once you have spoken somewhere, list it here like this:
+          <h3>Where I’ve spoken</h3>
+          <ul class="appearances">
+            <li><strong>Event name</strong>, City, 2026. Talk title.</li>
+          </ul>
+        -->
+      </div>
+    </div>
+  </section>
+
+  <section class="glossary wrap" aria-labelledby="glossary-title">
+    <div class="glossary-head">
+      <h2 id="glossary-title" class="section-title">A few German words for how I work.</h2>
+      <p>German has a word for almost everything, usually built by gluing smaller words together. These are the ones that describe me best.</p>
+    </div>
+    <dl class="entries">
+      {glossary.map((entry) => (
+        <div class="entry">
+          <dt>
+            <span class="article">{entry.article}</span>
+            <span class="compound" lang="de">
+              {entry.parts.map(([part]) => <span class="part">{part}</span>)}
+            </span>
+            <span class="literal">
+              {entry.parts.map(([, gloss]) => <span>{gloss}</span>)}
+            </span>
+          </dt>
+          <dd>
+            <span class="meaning">{entry.meaning}</span>
+            {entry.practice}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section id="contact" class="contact wrap" aria-labelledby="contact-title">
+    <h2 id="contact-title" class="say">Say hello.<br />Or hallo.</h2>
+    <p class="contact-note">For writing, speaking, or work, email is the best way to reach me.</p>
+    <a class="email" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    {(SITE.linkedin || HAS_CV) && (
+      <p class="elsewhere">
+        {SITE.linkedin && <a href={SITE.linkedin}>LinkedIn</a>}
+        {HAS_CV && <a href={url('cv.pdf')} download>CV (PDF)</a>}
+      </p>
+    )}
+  </section>
+</Base>
+
+<style>
+  section { scroll-margin-top: 4.5rem; }
+
+  /* About */
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 2rem clamp(2rem, 6vw, 6rem);
+    padding-block: clamp(4rem, 10vw, 7rem);
+    border-top: 1.5px solid var(--ink);
+  }
+  .about .section-title { font-size: var(--step-4); }
+  .about-body { max-width: var(--measure); }
+  .about-body p { margin: 0 0 1.1em; }
+  .lead { font-size: var(--step-1); line-height: 1.4; }
+  .portrait { width: 100%; max-width: 20rem; height: auto; margin-bottom: 2rem; border-radius: 4px; }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+    margin: 2.25rem 0;
+    font-family: var(--sans);
+  }
+  .facts dt { font-size: var(--step--1); color: var(--ink-soft); }
+  .facts dd { margin: 0.15rem 0 0; font-weight: 600; line-height: 1.3; }
+
+  /* Writing */
+  .writing { padding-block: clamp(2rem, 6vw, 4rem); }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .head a { font-family: var(--sans); font-weight: 600; }
+
+  /* Speaking: the one section printed in reverse, ink as the background */
+  .stage {
+    background: var(--stage);
+    color: var(--stage-text);
+    padding-block: clamp(4.5rem, 11vw, 8rem);
+  }
+  .stage ::selection { background: var(--stage-text); color: var(--stage); }
+  .stage-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 3rem clamp(2rem, 7vw, 7rem);
+  }
+  .stage-intro p:not(.status) { max-width: 32rem; margin: 1.5rem 0 2rem; font-size: var(--step-1); line-height: 1.4; }
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 1.5rem;
+    font-family: var(--sans);
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--stage-soft);
+  }
+  .tally {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--tally);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--tally) 30%, transparent);
+  }
+  .button.invert { background: var(--stage-text); border-color: var(--stage-text); color: var(--stage); }
+  .button.invert:hover { background: transparent; color: var(--stage-text); }
+  .talks h3 {
+    margin: 0 0 0.5rem;
+    font-family: var(--sans);
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--stage-soft);
+  }
+  .talks dl { margin: 0; }
+  .talks dl > div { padding-block: 1.25rem; border-bottom: 1px solid color-mix(in srgb, var(--stage-text) 25%, transparent); }
+  .talks dt {
+    font-family: var(--sans);
+    font-size: var(--step-1);
+    font-weight: 650;
+    font-stretch: 90%;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .talks dd { margin: 0.35rem 0 0; color: var(--stage-soft); line-height: 1.45; }
+
+  /* Glossary */
+  .glossary { padding-block: clamp(4.5rem, 11vw, 8rem); }
+  .glossary-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+    margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .glossary-head p { margin: 0; color: var(--ink-soft); max-width: 28rem; }
+  .entries {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3rem clamp(1.5rem, 4vw, 3.5rem);
+    margin: 0;
+  }
+  .entry { border-top: 1.5px solid var(--ink); padding-top: 1rem; }
+  .entry dt { display: grid; }
+  .article { font-style: italic; color: var(--ink-soft); }
+  .compound {
+    font-family: var(--sans);
+    font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem);
+    font-weight: 700;
+    font-stretch: 85%;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+  .part { transition: margin 220ms ease; }
+  .literal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5em;
+    margin-top: 0.3rem;
+    font-family: var(--sans);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .literal span + span::before { content: '+'; margin-right: 0.5em; opacity: 0.6; }
+  /* Pull the compound apart into its pieces on hover, so you can see how it was built */
+  .entry:hover .part + .part { margin-left: 0.18em; }
+  .entry dd { margin: 1rem 0 0; line-height: 1.5; }
+  .meaning { display: block; font-size: var(--step-1); font-style: italic; line-height: 1.3; margin-bottom: 0.4rem; }
+
+  /* Contact */
+  .contact {
+    padding-block: clamp(4rem, 10vw, 7rem) clamp(3rem, 8vw, 5rem);
+    border-top: 1.5px solid var(--ink);
+  }
+  .say {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: clamp(3.5rem, 13vw, 11rem);
+    font-weight: 800;
+    font-stretch: 75%;
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+  }
+  .contact-note { margin: 2rem 0 0.5rem; color: var(--ink-soft); }
+  .email {
+    font-family: var(--sans);
+    font-size: clamp(1.4rem, 1rem + 2.2vw, 2.6rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration-thickness: 2px;
+    overflow-wrap: anywhere;
+  }
+  .elsewhere { display: flex; gap: 1.5rem; margin: 1.5rem 0 0; font-family: var(--sans); font-weight: 600; }
+
+  @media (max-width: 56rem) {
+    .entries { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 48rem) {
+    .about, .stage-grid, .glossary-head { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 34rem) {
+    .entries { grid-template-columns: 1fr; }
+    .facts { grid-template-columns: 1fr; }
+  }
+</style>

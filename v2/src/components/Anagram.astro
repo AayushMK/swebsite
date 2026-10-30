@@ -1,0 +1,118 @@
+---
+// Each pair uses exactly the same letters. The caption is in Shrutika's voice.
+const pairs = [
+  ['listen', 'silent', 'Same six letters. The best speakers I know are good at both.'],
+  ['words', 'sword', 'Move one letter and words become a sword. I try to remember that whenever I write about people.'],
+  ['heart', 'earth', 'Move one letter and heart becomes earth. Most of what I write lives somewhere between the two.'],
+];
+const [first, , caption] = pairs[0];
+---
+<section class="anagram wrap" aria-labelledby="anagram-title" data-anagram data-pairs={JSON.stringify(pairs)}>
+  <h2 id="anagram-title" class="visually-hidden">A bit of wordplay</h2>
+  <p class="word" aria-hidden="true">
+    {[...first].map((ch) => <span class="letter">{ch}</span>)}
+  </p>
+  <p class="visually-hidden" aria-live="polite" data-said>{first}</p>
+  <div class="foot">
+    <p class="caption" data-caption>{caption}</p>
+    <button class="button quiet" type="button" data-rearrange hidden>Rearrange the letters</button>
+  </div>
+</section>
+
+<script>
+  import { arrange, flip, letterSpans, swapIn, swapOut } from '../lib/shuffle';
+
+  const root = document.querySelector<HTMLElement>('[data-anagram]');
+  if (root) {
+    const pairs: [string, string, string][] = JSON.parse(root.dataset.pairs!);
+    const word = root.querySelector<HTMLElement>('.word')!;
+    const said = root.querySelector<HTMLElement>('[data-said]')!;
+    const caption = root.querySelector<HTMLElement>('[data-caption]')!;
+    const button = root.querySelector<HTMLButtonElement>('[data-rearrange]')!;
+    let pair = 0;
+    let side = 0;
+    let busy = false;
+
+    const step = async () => {
+      if (busy) return;
+      busy = true;
+      const letters = [...word.querySelectorAll<HTMLElement>('.letter')];
+      if (side === 0) {
+        side = 1;
+        said.textContent = `${pairs[pair][0]} rearranged is ${pairs[pair][1]}`;
+        await flip(word, arrange(letters, pairs[pair][1]));
+      } else {
+        pair = (pair + 1) % pairs.length;
+        side = 0;
+        await swapOut(letters);
+        const next = letterSpans(pairs[pair][0]);
+        word.replaceChildren(...next);
+        caption.textContent = pairs[pair][2];
+        said.textContent = pairs[pair][0];
+        await swapIn(next);
+      }
+      button.textContent = side === 0 ? 'Rearrange the letters' : 'Try another word';
+      busy = false;
+    };
+
+    // Hovering (or tapping) the word swaps it with its partner and back, without moving on.
+    const toggle = async () => {
+      if (busy) return;
+      busy = true;
+      side = 1 - side;
+      const [a, b] = pairs[pair];
+      said.textContent = side === 1 ? `${a} rearranged is ${b}` : `${b} rearranged is ${a}`;
+      await flip(word, arrange([...word.querySelectorAll<HTMLElement>('.letter')], pairs[pair][side]));
+      button.textContent = side === 0 ? 'Rearrange the letters' : 'Try another word';
+      busy = false;
+    };
+
+    button.hidden = false;
+    button.addEventListener('click', step);
+    word.addEventListener('pointerenter', toggle);
+
+    // Show it once, the first time it scrolls into view. After that it waits for a click.
+    const seen = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        seen.disconnect();
+        setTimeout(step, 600);
+      },
+      { threshold: 0.6 },
+    );
+    seen.observe(word);
+  }
+</script>
+
+<style>
+  .anagram {
+    padding-block: clamp(4rem, 12vw, 9rem);
+  }
+  .word {
+    margin: 0 0 1.5rem -0.04em;
+    font-family: var(--sans);
+    font-size: clamp(4.5rem, 22vw, 18rem);
+    font-weight: 800;
+    font-stretch: 75%;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    width: fit-content;
+  }
+  .word :global(.letter) { display: inline-block; }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 3rem;
+  }
+  .caption {
+    max-width: 30rem;
+    margin: 0;
+    font-size: var(--step-1);
+    line-height: 1.35;
+    font-style: italic;
+    min-height: 2.7em;
+  }
+</style>

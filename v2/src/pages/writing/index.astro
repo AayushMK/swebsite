@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostRows from '../../components/PostRows.astro';
+import { getPosts } from '../../lib/site';
+
+const posts = getPosts();
+---
+<Base title="Writing" description="Essays by Shrutika on everyday life, society and film.">
+  <section class="wrap page">
+    <h1 class="section-title">Writing</h1>
+    <p class="intro">
+      Essays on everyday life, the society around us, and the films that stay with us. Some are
+      about things that happened to me. Most are about people.
+    </p>
+    <PostRows posts={posts} />
+  </section>
+</Base>
+
+<style>
+  .page { padding-block: clamp(3rem, 8vw, 5rem) 2rem; }
+  h1 { font-size: var(--step-4); }
+  .intro { max-width: var(--measure); margin: 1.5rem 0 3rem; font-size: var(--step-1); line-height: 1.4; }
+</style>

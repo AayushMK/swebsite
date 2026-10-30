@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/site';
+---
+<Base title="Page not found">
+  <section class="wrap lost">
+    <h1>Lost for words.</h1>
+    <p>This page doesn’t exist, which is a rare thing for me to say about words. It may have moved.</p>
+    <p><a class="button primary" href={url()}>Go to the home page</a></p>
+  </section>
+</Base>
+
+<style>
+  .lost { padding-block: clamp(4rem, 12vw, 8rem); }
+  h1 { margin: 0; font-family: var(--sans); font-size: var(--step-4); font-weight: 800; font-stretch: 75%; line-height: 0.95; letter-spacing: -0.035em; }
+  p { max-width: var(--measure); margin: 1.5rem 0 0; font-size: var(--step-1); line-height: 1.4; }
+</style>
