@@ -44,7 +44,7 @@ const tiles = [
           </span>
         </p>
         <ol class="senses">
-          <li>From Sanskrit <i>śruti</i>, “that which is heard.”</li>
+          <li>From Sanskrit <i>shruti</i>, “that which is heard.”</li>
           <li>A psychology graduate who writes about people, and then says it out loud, in English or auf Deutsch.</li>
         </ol>
         <p class="example">“Ask Shrutika. She’ll have the word for it.”</p>
@@ -116,10 +116,10 @@ const tiles = [
 
     if (word.dataset.scrambled) {
       // Wait for the fonts so letters don't jump, but never keep the name scrambled for long.
-      const fontsOrTimeout = Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]);
+      const fontsOrTimeout = Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 600))]);
       busy = true;
       fontsOrTimeout
-        .then(() => new Promise((r) => setTimeout(r, 500)))
+        .then(() => new Promise((r) => setTimeout(r, 200)))
         .then(settle)
         .then(() => {
           document.documentElement.classList.add('hero-settled');
@@ -139,6 +139,7 @@ const tiles = [
   }
 
   // Desk objects can be picked up and dropped anywhere, like things on a real desk.
+  // Mouse and pen only: on touch screens a swipe over the desk should scroll the page.
   let top = 10;
   for (const el of document.querySelectorAll<HTMLElement>('[data-drag]')) {
     let startX = 0;
@@ -146,6 +147,7 @@ const tiles = [
     let baseX = 0;
     let baseY = 0;
     el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') return;
       el.setPointerCapture(e.pointerId);
       el.classList.add('held');
       el.style.zIndex = String(++top);
@@ -212,7 +214,8 @@ const tiles = [
     font-size: var(--step-1);
     color: var(--ink-soft);
   }
-  .ipa { font-style: normal; margin-right: 0.4em; }
+  /* A system serif for the phonetic symbols, so they don't pull in another 85KB font file */
+  .ipa { font-family: 'Iowan Old Style', Palatino, 'Times New Roman', serif; font-style: normal; margin-right: 0.4em; }
   .note {
     display: inline-flex;
     align-items: center;
@@ -260,7 +263,6 @@ const tiles = [
     top: var(--y);
     rotate: var(--r);
     cursor: grab;
-    touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     box-shadow: 0 1px 2px rgb(14 20 70 / 0.12), 0 10px 24px -8px rgb(14 20 70 / 0.28);
@@ -346,7 +348,7 @@ const tiles = [
     line-height: 1.1;
   }
   .sticky-label { font-size: 1.1em; opacity: 0.75; }
-  .sticky-word { font-size: 2.3em; font-weight: 700; }
+  .sticky-word { font-size: 2.5em; font-weight: 500; }
   .sticky-def { font-size: 1.25em; }
 
   /* Polaroid, shown once public/portrait.jpg exists */
